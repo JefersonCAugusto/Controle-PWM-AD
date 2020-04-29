@@ -56,5 +56,29 @@ void main()
    ADCON1 = 0b00001110;
    ADCON2 = 0b10111110;
 
+    Lcd_Init();                               // Inicializa LCD.
 
+   Lcd_Cmd(_LCD_CLEAR);                      // apaga display.
+   Lcd_Cmd(_LCD_CURSOR_OFF);                 // desliga cursor.
+   Lcd_Out(1, 1, "Duty Cycle: ");            // imprime linha 1 coluna1
+   
+   PWM1_Init(5000);                  // 1nicializa módulo PWM 5Khz
+   PWM1_Set_Duty(255);               //duty-cycle do PWM em 100%.   1 byte
+   PWM1_Start();                     // inicia PWM.
+ 
+   while(1){ 
+   
+      leituraAD= ADC_Read(0);          // lê Canal AD em uso
+      LeituraAD=(leituraAD*0.24);     // converte  duty cycle 255/1023
+      PWM1_Set_Duty(leituraAD);        // envia o valor p/ PWM
+      leituraAD=(leituraAD*0.41);     // converte  duty cycle em %
+      WordToStr(leituraAD, frase);   // converte no A/D em string
+      Lcd_Out(1,11,frase);            // imprime Duty Cycle.
+
+
+      WordToStr(timer1, frase);  // converte o valor para string
+      Lcd_Out(2,1,frase);             // imprime no RPM.
+      Lcd_Out_CP(" RPM");               // string "RPM".
+      Delay_10us;                     //espera para aparecer no display
+   }
 }
