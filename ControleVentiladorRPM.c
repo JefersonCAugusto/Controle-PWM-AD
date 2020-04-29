@@ -1,5 +1,6 @@
+
 // projeto elaborado em C(PIC) utilizando placa de desenvolvimento microgenios
-//Leitura do canal A/D AN0, utilizando o canal pwn para controlar um cooler 12V 
+//Leitura do canal A/D AN0, utilizando o canal pwn para controlar um cooler 12V
 //e verificar a velocidade em  RPM atravez de dois censores IR
 //usei bibliotecas de LCD 16x2,PWM,Conversor A/D e convorsoes de unidades.
 
@@ -14,6 +15,13 @@ sbit LCD_D7 at RD7_bit;
 sbit LCD_D6 at RD6_bit;
 sbit LCD_D5 at RD5_bit;
 sbit LCD_D4 at RD4_bit;
+sbit LCD_RS_Direction at TRISE2_bit;
+sbit LCD_EN_Direction at TRISE1_bit;
+sbit LCD_D7_Direction at TRISD7_bit;
+sbit LCD_D6_Direction at TRISD6_bit;
+sbit LCD_D5_Direction at TRISD5_bit;
+sbit LCD_D4_Direction at TRISD4_bit;
+
 
 void main()
 {
@@ -61,13 +69,13 @@ unsigned int timer1;    // pulsos do timer 1(rpm).
    Lcd_Cmd(_LCD_CLEAR);                      // apaga display.
    Lcd_Cmd(_LCD_CURSOR_OFF);                 // desliga cursor.
    Lcd_Out(1, 1, "Duty Cycle: ");            // imprime linha 1 coluna1
-   
+
    PWM1_Init(5000);                  // 1nicializa módulo PWM 5Khz
    PWM1_Set_Duty(255);               //duty-cycle do PWM em 100%.   1 byte
    PWM1_Start();                     // inicia PWM.
- 
-   while(1){ 
-   
+
+   while(1){
+
       leituraAD= ADC_Read(0);          // lê Canal AD em uso
       LeituraAD=(leituraAD*0.24);     // converte  duty cycle 255/1023
       PWM1_Set_Duty(leituraAD);        // envia o valor p/ PWM
